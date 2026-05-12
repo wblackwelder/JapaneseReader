@@ -203,7 +203,7 @@ export function showPopup(
       popupSize,
       side: popupPos.side,
       target: cursorPos,
-      theme: options.popupStyle,
+      theme: 'wine',
     });
   }
 

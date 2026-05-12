@@ -85,9 +85,10 @@ export function WordEntry(props: WordEntryProps) {
   const matchingKanji = matchedOnKana
     ? kanjiHeadwords.filter((k) => k.match)
     : kanjiHeadwords;
+  const currentMatchingKanji = getCurrentHeadwords(matchingKanji);
 
   // Sort matched kanji entries first
-  matchingKanji.sort((a, b) => Number(b.match) - Number(a.match));
+  currentMatchingKanji.sort((a, b) => Number(b.match) - Number(a.match));
 
   // Typically we only show the matching kana headwords but if we matched on
   // an irregular form or a search-only form, we should show the regular kana
@@ -108,21 +109,23 @@ export function WordEntry(props: WordEntryProps) {
     );
 
   // For search-only kanji, we show them only if they are the ONLY matches.
-  const matchingKana = entry.r.filter(
-    (r) =>
-      !r.i?.includes('sk') &&
-      (r.match ||
-        (matchedOnIrregularKana &&
-          !r.i?.includes('ik') &&
-          !r.i?.includes('ok') &&
-          !r.i?.includes('rk') &&
-          !r.i?.includes('sk')))
+  const matchingKana = getCurrentHeadwords(
+    entry.r.filter(
+      (r) =>
+        !r.i?.includes('sk') &&
+        (r.match ||
+          (matchedOnIrregularKana &&
+            !r.i?.includes('ik') &&
+            !r.i?.includes('ok') &&
+            !r.i?.includes('rk') &&
+            !r.i?.includes('sk')))
+    )
   );
 
   if (!props.config.readingOnly) {
     // If we have hidden all the kanji headwords, then we shouldn't show
     // "usually kana" annotations on definitions.
-    if (!matchingKanji.length) {
+    if (!currentMatchingKanji.length) {
       entry.s = entry.s.map((s) => ({
         ...s,
         misc: s.misc?.filter((m) => m !== 'uk'),
@@ -170,7 +173,7 @@ export function WordEntry(props: WordEntryProps) {
           </div>
         )}
 
-        {matchingKanji.length > 0 && (
+        {currentMatchingKanji.length > 0 && (
           <span
             class={classes(
               'tp:text-1.5xl',
@@ -180,7 +183,7 @@ export function WordEntry(props: WordEntryProps) {
             )}
             lang="ja"
           >
-            {matchingKanji.map((kanji, index) => {
+            {currentMatchingKanji.map((kanji, index) => {
               const ki = new Set(kanji.i || []);
 
               const dimmed =
@@ -202,7 +205,7 @@ export function WordEntry(props: WordEntryProps) {
                   >
                     <span class="tp:space-x-1">
                       <span>{kanji.ent}</span>
-                      {!!kanji.i?.length && <HeadwordInfo info={kanji.i} />}
+                      <HeadwordInfo info={kanji.i} />
                       {props.config.showPriority && !!kanji.p?.length && (
                         <PriorityMark priority={kanji.p} />
                       )}
@@ -254,12 +257,14 @@ export function WordEntry(props: WordEntryProps) {
                   >
                     <span class="tp:space-x-1">
                       <span>
-                        <Reading
-                          kana={kana}
-                          accentDisplay={props.config.accentDisplay}
-                        />
+                        <Reading kana={kana} accentDisplay="none" />
                       </span>
-                      {!!kana.i?.length && <HeadwordInfo info={kana.i} />}
+                      {kana.romaji && (
+                        <span class="tp:text-base tp:opacity-80">
+                          {kana.romaji}
+                        </span>
+                      )}
+                      <HeadwordInfo info={kana.i} />
                       {props.config.showPriority && !!kana.p?.length && (
                         <PriorityMark priority={kana.p} />
                       )}
@@ -274,21 +279,6 @@ export function WordEntry(props: WordEntryProps) {
                 </Fragment>
               );
             })}
-          </span>
-        )}
-
-        {props.config.showRomaji && matchingKana.length && (
-          <span
-            class={classes(
-              'tp:text-base',
-              'tp:text-(--reading-highlight)',
-              'tp:group-data-selected:text-(--selected-reading-highlight)',
-              interactive &&
-                'tp:group-hover:text-(--selected-reading-highlight)'
-            )}
-            lang="ja"
-          >
-            {matchingKana.map((r) => r.romaji).join(', ')}
           </span>
         )}
 
@@ -312,6 +302,16 @@ export function WordEntry(props: WordEntryProps) {
       )}
     </div>
   );
+}
+
+function getCurrentHeadwords<T extends { i?: Array<string> }>(
+  headwords: Array<T>
+): Array<T> {
+  const currentHeadwords = headwords.filter(
+    (headword) => !headword.i?.some((info) => info === 'ok' || info === 'oK')
+  );
+
+  return currentHeadwords.length ? currentHeadwords : headwords;
 }
 
 function PriorityMark({ priority }: { priority: Array<string> }) {

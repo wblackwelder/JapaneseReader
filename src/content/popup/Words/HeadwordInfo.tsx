@@ -2,8 +2,11 @@ import type { KanjiInfo, ReadingInfo } from '@birchill/jpdict-idb';
 
 import { useLocale } from '../../../common/i18n';
 
-export function HeadwordInfo({ info }: { info: Array<string> }) {
+export function HeadwordInfo({ info }: { info: Array<string> | undefined }) {
   const { t, langTag } = useLocale();
+  if (!info?.length) {
+    return null;
+  }
 
   // Some KanjiInfo/RadicalInfo values differ only by case but
   // addons-linter (as used by webext etc.) does not allow WebExtension i18n
@@ -26,7 +29,9 @@ export function HeadwordInfo({ info }: { info: Array<string> }) {
     sk: 'ikana',
   };
 
-  return info.map((i) => {
+  const visibleInfo = info.filter((i) => i !== 'ok' && i !== 'oK');
+
+  return visibleInfo.map((i) => {
     const key = specialKeys.hasOwnProperty(i)
       ? specialKeys[i as KanjiInfo | ReadingInfo]
       : i;

@@ -15,16 +15,12 @@ import { renderCopyOverlay } from './copy-overlay';
 import type { CopyState } from './copy-state';
 import { updateExpandable } from './expandable';
 import { addFontStyles, removeFontStyles } from './font-styles';
-import { renderKanjiEntries } from './kanji';
 import { renderMetadata } from './metadata';
-import { renderNamesEntries } from './names';
 import { getPopupContainer } from './popup-container';
 import popupStyles from './popup.css?inline';
 import type { ShowPopupOptions } from './show-popup';
 import { renderCopyDetails, renderUpdatingStatus } from './status';
-import { onHorizontalSwipe } from './swipe';
-import { renderTabBar, showWordsTab } from './tabs';
-import { renderWordEntries } from './words';
+import { getVisibleWordEntries, renderWordEntries } from './words';
 
 export function renderPopup(
   result: QueryResult | undefined,
@@ -47,45 +43,12 @@ export function renderPopup(
     displayMode: options.displayMode,
     fontFace: options.fontFace || 'bundled',
     fontSize: options.fontSize || 'normal',
-    popupStyle: options.popupStyle,
+    popupStyle: 'wine',
   });
 
   const contentContainer = html('div', { class: 'content' });
 
   const hasResult = result && (result.words || result.kanji || result.names);
-  const showTabs =
-    hasResult &&
-    result.resultType !== 'db-unavailable' &&
-    !result.title &&
-    options.tabDisplay !== 'none';
-
-  if (showTabs) {
-    const enabledTabs = {
-      words: showWordsTab(result, !!options.meta),
-      kanji: !!result?.kanji,
-      names: !!result?.names,
-    };
-
-    windowElem.append(
-      renderTabBar({
-        closeShortcuts: options.closeShortcuts,
-        displayMode: options.displayMode,
-        enabledTabs,
-        onClosePopup: options.onClosePopup,
-        onShowSettings: options.onShowSettings,
-        onSwitchDictionary: options.onSwitchDictionary,
-        onTogglePin: options.onTogglePin,
-        pinShortcuts: options.pinShortcuts,
-        selectedTab: options.dictToShow,
-      })
-    );
-
-    windowElem.dataset.tabSide = options.tabDisplay || 'top';
-
-    onHorizontalSwipe(contentContainer, (direction) => {
-      options.onSwitchDictionary?.(direction === 'left' ? 'prev' : 'next');
-    });
-  }
 
   const overlayContainer = html('div', {
     class: classes(
@@ -99,45 +62,25 @@ export function renderPopup(
   });
   windowElem.append(overlayContainer);
 
-  const resultToShow = result?.[options.dictToShow];
+  const resultToShow = result?.words;
 
   switch (resultToShow?.type) {
-    case 'kanji':
-      contentContainer.append(
-        html(
-          'div',
-          { class: 'expandable' },
-          renderKanjiEntries({ entries: resultToShow.data, options })
-        )
-      );
-      break;
-
-    case 'names':
-      contentContainer.append(
-        renderNamesEntries({
-          entries: resultToShow.data,
-          matchLen: resultToShow.matchLen,
-          more: resultToShow.more,
-          options: {
-            ...options,
-            // Hide the meta if we have already shown it on the words tab
-            meta: result?.words ? undefined : options.meta,
-          },
-        })
-      );
-      break;
-
     case 'words':
       {
+        const entries = getVisibleWordEntries(resultToShow.data);
+        if (!entries.length && !options.meta) {
+          return null;
+        }
+
         contentContainer.append(
           html(
             'div',
             { class: 'expandable' },
             renderWordEntries({
-              entries: resultToShow.data,
+              entries,
               matchLen: resultToShow.matchLen,
               more: resultToShow.more,
-              namePreview: result!.namePreview,
+              namePreview: undefined,
               options,
               title: result!.title,
             })
@@ -184,7 +127,7 @@ export function renderPopup(
         onCancelCopy: options.onCancelCopy,
         onCopy: options.onCopy,
         result: resultToShow ? result : undefined,
-        series: options.dictToShow,
+        series: 'words',
         showKanjiComponents: options.showKanjiComponents,
         showRomaji: options.showRomaji,
       })
@@ -212,7 +155,7 @@ export function renderPopup(
   const copyDetails = renderCopyDetails({
     copyNextKey: options.copyNextKey,
     copyState: options.copyState,
-    series: resultToShow?.type || 'words',
+    series: 'words',
   });
 
   let statusBar: HTMLElement | null = null;
@@ -232,7 +175,7 @@ export function renderPopup(
     );
   }
 
-  if (!showTabs && options.onClosePopup) {
+  if (options.onClosePopup) {
     windowElem.append(
       html(
         'div',

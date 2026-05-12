@@ -217,6 +217,97 @@
 }
 
 /*
+ * Theme - wine
+ */
+
+.theme-wine {
+  --text-color: #f4eee7;
+  --bg-rgb: 61, 18, 32;
+  --bg-color: rgb(var(--bg-rgb));
+  --border-color: #7a2f3e;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+
+  --primary-highlight: #ffe9d2;
+  --reading-highlight: #f0c7b8;
+  --conj-color: #d9a7a0;
+
+  --tag-border: rgba(244, 238, 231, 0.42);
+  --bunpro-vocab: #f0c7b8;
+  --bunpro-grammar: #e2a3ac;
+  --bunpro-src: #d7b9b4;
+
+  --title-bg: #4a182c;
+  --title-fg: var(--text-color);
+
+  --reading-label: #f0c7b8;
+  --okurigana-color: #ffe9d2;
+  --hi-contrast-pitch-accent: #fff8ef;
+  --cell-highlight-bg: #4a182c;
+  --cell-highlight-fg: #f4eee7;
+  --cell-bg-hover: #572036;
+  --cell-link-fg: #ffe9d2;
+
+  --selected-bg: #6a293c;
+  --hover-bg: #572036;
+  --selected-highlight: #fff8ef;
+  --selected-reading-highlight: #ffd5c6;
+  --selected-def-color: var(--text-color);
+  --selected-tag-color: var(--text-color);
+  --selected-tag-border: var(--tag-border);
+
+  --status-bg: rgba(255, 255, 255, 0.12);
+  --meta-bg: rgba(255, 255, 255, 0.12);
+
+  --scrollbar-fg: #7a2f3e;
+  --scrollbar-bg: var(--bg-color);
+
+  --puck-bg: var(--bg-color);
+  --puck-bg-highlight: #572036;
+  --puck-ring-color: #7a2f3e;
+
+  --status-button-color: var(--text-color);
+  --status-button-primary-text-color: var(--bg-color);
+
+  --expand-button-rgb: 122, 47, 62;
+  --expand-button-color: rgb(var(--expand-button-rgb));
+
+  --tag-green-bg: rgba(214, 175, 123, 0.2);
+  --tag-green-text: #f2d8b5;
+  --tag-green-border: rgba(242, 216, 181, 0.45);
+
+  --tag-pink-bg: rgba(231, 151, 164, 0.2);
+  --tag-pink-text: #f0c7ce;
+  --tag-pink-border: rgba(240, 199, 206, 0.45);
+
+  --tag-blue-bg: rgba(212, 169, 219, 0.2);
+  --tag-blue-text: #e8d0ed;
+  --tag-blue-border: rgba(232, 208, 237, 0.45);
+}
+
+.window.theme-wine {
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+
+.window.theme-wine .w-def .w-dial {
+  background: var(--tag-pink-bg);
+  color: var(--tag-pink-text);
+  --tag-border: var(--tag-pink-border);
+}
+
+.window.theme-wine .w-def .w-misc {
+  background: var(--tag-blue-bg);
+  color: var(--tag-blue-text);
+  --tag-border: var(--tag-blue-border);
+}
+
+.window.theme-wine .w-def .w-field {
+  background: var(--tag-green-bg);
+  color: var(--tag-green-text);
+  --tag-border: var(--tag-green-border);
+}
+
+/*
  * Theme - lightblue
  */
 
