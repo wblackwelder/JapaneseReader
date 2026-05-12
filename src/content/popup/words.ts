@@ -62,7 +62,7 @@ export function getVisibleWordEntries(
     .filter((entry) => entry.s.some((sense) => sense.match));
 }
 
-const archaicMiscTags = new Set(['arch', 'obs']);
+const archaicMiscTags = new Set(['arch', 'obs', 'obsc']);
 const archaicPosTags = new Set([
   'adj-kari',
   'adj-ku',
@@ -103,10 +103,7 @@ const archaicPosTags = new Set([
 ]);
 
 function removeArchaicSenses(entry: WordResult): WordResult {
-  return {
-    ...entry,
-    s: entry.s.filter((sense) => !isArchaicSense(sense)),
-  };
+  return { ...entry, s: entry.s.filter((sense) => !isArchaicSense(sense)) };
 }
 
 function isArchaicSense(sense: Sense): boolean {

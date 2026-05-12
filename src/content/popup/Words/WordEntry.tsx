@@ -3,10 +3,8 @@ import { Fragment } from 'preact';
 import type { WordResult } from '../../../background/search-result';
 import type { ContentConfigParams } from '../../../common/content-config-params';
 import { useLocale } from '../../../common/i18n';
-import { highPriorityLabels } from '../../../common/priority-labels';
 import { classes } from '../../../utils/classes';
 
-import { Star } from '../Icons/Star';
 import { usePopupOptions } from '../options-context';
 import { serializeReasonChains } from '../serialize-reasons';
 
@@ -82,9 +80,7 @@ export function WordEntry(props: WordEntryProps) {
   // 截断、切断  さいだん
   //
   // which would be misleading since 切断 can never have that reading.
-  const matchingKanji = matchedOnKana
-    ? kanjiHeadwords.filter((k) => k.match)
-    : kanjiHeadwords;
+  const matchingKanji = kanjiHeadwords.filter((k) => k.match);
   const currentMatchingKanji = getCurrentHeadwords(matchingKanji);
 
   // Sort matched kanji entries first
@@ -206,9 +202,6 @@ export function WordEntry(props: WordEntryProps) {
                     <span class="tp:space-x-1">
                       <span>{kanji.ent}</span>
                       <HeadwordInfo info={kanji.i} />
-                      {props.config.showPriority && !!kanji.p?.length && (
-                        <PriorityMark priority={kanji.p} />
-                      )}
                     </span>
 
                     {props.config.waniKaniVocabDisplay !== 'hide' &&
@@ -265,9 +258,6 @@ export function WordEntry(props: WordEntryProps) {
                         </span>
                       )}
                       <HeadwordInfo info={kana.i} />
-                      {props.config.showPriority && !!kana.p?.length && (
-                        <PriorityMark priority={kana.p} />
-                      )}
                     </span>
                     {props.config.bunproDisplay && kana.bv && (
                       <BunproTag data={kana.bv} type="vocab" />
@@ -304,22 +294,31 @@ export function WordEntry(props: WordEntryProps) {
   );
 }
 
-function getCurrentHeadwords<T extends { i?: Array<string> }>(
-  headwords: Array<T>
-): Array<T> {
+function getCurrentHeadwords<
+  T extends { ent?: string; i?: Array<string>; romaji?: string },
+>(headwords: Array<T>): Array<T> {
   const currentHeadwords = headwords.filter(
     (headword) => !headword.i?.some((info) => info === 'ok' || info === 'oK')
   );
 
-  return currentHeadwords.length ? currentHeadwords : headwords;
+  return dedupeHeadwords(
+    currentHeadwords.length ? currentHeadwords : headwords
+  );
 }
 
-function PriorityMark({ priority }: { priority: Array<string> }) {
-  // These are the ones that are annotated with a (P) in the EDICT file.
-  const highPriorityLabelsSet = new Set(highPriorityLabels);
-  const highPriority = priority.some((p) => highPriorityLabelsSet.has(p));
+function dedupeHeadwords<
+  T extends { ent?: string; i?: Array<string>; romaji?: string },
+>(headwords: Array<T>): Array<T> {
+  const seen = new Set<string>();
 
-  return <Star style={highPriority ? 'full' : 'hollow'} />;
+  return headwords.filter((headword) => {
+    const key = `${headword.ent || ''}\n${headword.romaji || ''}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
 }
 
 function WaniKanjiLevelTag({ level, ent }: { level: number; ent: string }) {
