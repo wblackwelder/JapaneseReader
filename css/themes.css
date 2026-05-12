@@ -221,54 +221,54 @@
  */
 
 .theme-wine {
-  --text-color: #f4eee7;
-  --bg-rgb: 61, 18, 32;
+  --text-color: #fff4e8;
+  --bg-rgb: 172, 103, 55;
   --bg-color: rgb(var(--bg-rgb));
-  --border-color: #7a2f3e;
+  --border-color: #6f2c1f;
   --shadow-color: rgba(0, 0, 0, 0.3);
 
-  --primary-highlight: #ffe9d2;
-  --reading-highlight: #f0c7b8;
-  --conj-color: #d9a7a0;
+  --primary-highlight: #fff8ef;
+  --reading-highlight: #ffe6cf;
+  --conj-color: #f8d1bc;
 
-  --tag-border: rgba(244, 238, 231, 0.42);
-  --bunpro-vocab: #f0c7b8;
-  --bunpro-grammar: #e2a3ac;
-  --bunpro-src: #d7b9b4;
+  --tag-border: rgba(255, 244, 232, 0.5);
+  --bunpro-vocab: #ffe6cf;
+  --bunpro-grammar: #ffc5bf;
+  --bunpro-src: #f8d1bc;
 
-  --title-bg: #4a182c;
+  --title-bg: #984f2c;
   --title-fg: var(--text-color);
 
-  --reading-label: #f0c7b8;
-  --okurigana-color: #ffe9d2;
-  --hi-contrast-pitch-accent: #fff8ef;
-  --cell-highlight-bg: #4a182c;
-  --cell-highlight-fg: #f4eee7;
-  --cell-bg-hover: #572036;
-  --cell-link-fg: #ffe9d2;
+  --reading-label: #ffe6cf;
+  --okurigana-color: #fff8ef;
+  --hi-contrast-pitch-accent: #fff4e8;
+  --cell-highlight-bg: #984f2c;
+  --cell-highlight-fg: #fff4e8;
+  --cell-bg-hover: #bd7543;
+  --cell-link-fg: #fff8ef;
 
-  --selected-bg: #6a293c;
-  --hover-bg: #572036;
+  --selected-bg: #bd7543;
+  --hover-bg: #bd7543;
   --selected-highlight: #fff8ef;
-  --selected-reading-highlight: #ffd5c6;
+  --selected-reading-highlight: #ffe6cf;
   --selected-def-color: var(--text-color);
   --selected-tag-color: var(--text-color);
   --selected-tag-border: var(--tag-border);
 
-  --status-bg: rgba(255, 255, 255, 0.12);
-  --meta-bg: rgba(255, 255, 255, 0.12);
+  --status-bg: rgba(255, 244, 232, 0.12);
+  --meta-bg: rgba(255, 244, 232, 0.12);
 
-  --scrollbar-fg: #7a2f3e;
+  --scrollbar-fg: #6f2c1f;
   --scrollbar-bg: var(--bg-color);
 
   --puck-bg: var(--bg-color);
-  --puck-bg-highlight: #572036;
-  --puck-ring-color: #7a2f3e;
+  --puck-bg-highlight: #bd7543;
+  --puck-ring-color: #6f2c1f;
 
   --status-button-color: var(--text-color);
   --status-button-primary-text-color: var(--bg-color);
 
-  --expand-button-rgb: 122, 47, 62;
+  --expand-button-rgb: 111, 44, 31;
   --expand-button-color: rgb(var(--expand-button-rgb));
 
   --tag-green-bg: rgba(214, 175, 123, 0.2);

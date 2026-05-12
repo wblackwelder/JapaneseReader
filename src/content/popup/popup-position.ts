@@ -63,7 +63,6 @@ export function getPopupPosition({
   popupSize,
   positionMode,
   safeArea: initialSafeArea,
-  pointerType,
 }: {
   // Allow overlapping with the cursor position in order to avoid constraining
   // the height
@@ -76,7 +75,6 @@ export function getPopupPosition({
   popupSize: { width: number; height: number };
   positionMode: PopupPositionMode;
   safeArea: PaddingBox;
-  pointerType: 'cursor' | 'puck';
 }): PopupPosition {
   const { scrollX, scrollY } = getScrollOffset();
 
@@ -140,7 +138,6 @@ export function getPopupPosition({
       scrollY,
       stageWidth,
       stageHeight,
-      pointerType,
     });
   }
 
@@ -320,7 +317,6 @@ function getAutoPosition({
   scrollY,
   stageWidth,
   stageHeight,
-  pointerType,
 }: {
   allowVerticalOverlap: boolean;
   cursorClearance: MarginBox;
@@ -333,7 +329,6 @@ function getAutoPosition({
   scrollY: number;
   stageWidth: number;
   stageHeight: number;
-  pointerType: 'cursor' | 'puck';
 }): PopupPosition {
   const extendedPosition = getScreenAutoPosition({
     allowVerticalOverlap,
@@ -345,7 +340,6 @@ function getAutoPosition({
     safeArea,
     stageWidth,
     stageHeight,
-    pointerType,
   });
 
   return extendedPosition
@@ -387,7 +381,6 @@ function getScreenAutoPosition({
   safeArea,
   stageWidth,
   stageHeight,
-  pointerType,
 }: {
   allowVerticalOverlap: boolean;
   cursorClearance: MarginBox;
@@ -398,7 +391,6 @@ function getScreenAutoPosition({
   safeArea: PaddingBox;
   stageWidth: number;
   stageHeight: number;
-  pointerType: 'cursor' | 'puck';
 }): ExtendedPopupPosition | undefined {
   // Set up a few useful variables...
   const x = cursorPos?.x || 0;
@@ -408,28 +400,16 @@ function getScreenAutoPosition({
   const safeRight = stageWidth - safeArea.right;
   const safeBottom = stageHeight - safeArea.bottom;
 
-  // Generate the possible position sizes in order of preference.
-  //
-  // We prefer positions in the block direction on the 'after' side unless we
-  // are looking up horizontal text with the puck, in which case we prefer the
-  // 'before' side (i.e. above the target text).
-
-  // Prefer the block direction
-  const axisOrder = isVerticalText
-    ? (['horizontal', 'vertical'] as const)
-    : (['vertical', 'horizontal'] as const);
-
-  // Prefer the 'after' side
-  const sides = ['after', 'before'] as const;
+  // Generate the possible position sizes in order of preference. This customized
+  // build keeps the popup below the hovered text instead of flipping above it.
+  const axisOrder = ['vertical'] as const;
+  const sides = ['after'] as const;
 
   // Store the possible layouts
   const candidates: Array<ExtendedPopupPosition | undefined> = [];
 
   for (const axis of axisOrder) {
-    // Prefer the 'before' side when we are looking up horizontal text with the
-    // puck.
-    const swapSides = pointerType === 'puck' && axis === 'vertical';
-    for (const side of swapSides ? sides.slice().reverse() : sides) {
+    for (const side of sides) {
       const position = calculatePosition({
         axis,
         cursorClearance,

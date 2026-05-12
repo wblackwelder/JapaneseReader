@@ -129,7 +129,6 @@ export function showPopup(
     positionMode: options.positionMode,
     popupSize,
     safeArea: options.safeArea,
-    pointerType: options.pointerType,
   });
 
   //
