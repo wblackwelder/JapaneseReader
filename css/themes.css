@@ -222,9 +222,9 @@
 
 .theme-wine {
   --text-color: #fff4e8;
-  --bg-rgb: 172, 103, 55;
+  --bg-rgb: 129, 77, 41;
   --bg-color: rgb(var(--bg-rgb));
-  --border-color: #6f2c1f;
+  --border-color: #572016;
   --shadow-color: rgba(0, 0, 0, 0.3);
 
   --primary-highlight: #fff8ef;
@@ -236,19 +236,19 @@
   --bunpro-grammar: #ffc5bf;
   --bunpro-src: #f8d1bc;
 
-  --title-bg: #984f2c;
+  --title-bg: #713b21;
   --title-fg: var(--text-color);
 
   --reading-label: #ffe6cf;
   --okurigana-color: #fff8ef;
   --hi-contrast-pitch-accent: #fff4e8;
-  --cell-highlight-bg: #984f2c;
+  --cell-highlight-bg: #713b21;
   --cell-highlight-fg: #fff4e8;
-  --cell-bg-hover: #bd7543;
+  --cell-bg-hover: #8f5832;
   --cell-link-fg: #fff8ef;
 
-  --selected-bg: #bd7543;
-  --hover-bg: #bd7543;
+  --selected-bg: #8f5832;
+  --hover-bg: #8f5832;
   --selected-highlight: #fff8ef;
   --selected-reading-highlight: #ffe6cf;
   --selected-def-color: var(--text-color);
@@ -258,17 +258,17 @@
   --status-bg: rgba(255, 244, 232, 0.12);
   --meta-bg: rgba(255, 244, 232, 0.12);
 
-  --scrollbar-fg: #6f2c1f;
+  --scrollbar-fg: #572016;
   --scrollbar-bg: var(--bg-color);
 
   --puck-bg: var(--bg-color);
-  --puck-bg-highlight: #bd7543;
-  --puck-ring-color: #6f2c1f;
+  --puck-bg-highlight: #8f5832;
+  --puck-ring-color: #572016;
 
   --status-button-color: var(--text-color);
   --status-button-primary-text-color: var(--bg-color);
 
-  --expand-button-rgb: 111, 44, 31;
+  --expand-button-rgb: 87, 32, 22;
   --expand-button-color: rgb(var(--expand-button-rgb));
 
   --tag-green-bg: rgba(214, 175, 123, 0.2);
